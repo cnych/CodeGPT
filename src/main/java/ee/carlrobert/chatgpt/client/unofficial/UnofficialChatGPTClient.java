@@ -39,7 +39,7 @@ public class UnofficialChatGPTClient extends Client {
     });
   }
 
-  protected ApiRequestDetails getRequestDetails(String prompt) {
+  protected ApiRequestDetails getRequestDetails(String baseUrl, String prompt) {
     var settings = SettingsState.getInstance();
     var payload = new HashMap<>(Map.of(
         "action", "next",

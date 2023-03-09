@@ -30,7 +30,7 @@ public class ChatCompletionClient extends Client {
     queries.clear();
   }
 
-  protected ApiRequestDetails getRequestDetails(String prompt) {
+  protected ApiRequestDetails getRequestDetails(String baseUrl, String prompt) {
     var messages = new ArrayList<ApiRequestMessage>();
     messages.add(new ApiRequestMessage(
         "system",
@@ -42,7 +42,7 @@ public class ChatCompletionClient extends Client {
     messages.add(new ApiRequestMessage("user", prompt));
 
     return new ApiRequestDetails(
-        "https://api.openai.com/v1/chat/completions",
+        baseUrl + "/chat/completions",
         new ApiRequest(
             SettingsState.getInstance().chatCompletionBaseModel.getModel(),
             true,

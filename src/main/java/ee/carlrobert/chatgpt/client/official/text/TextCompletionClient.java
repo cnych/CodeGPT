@@ -31,9 +31,9 @@ public class TextCompletionClient extends Client {
     queries.clear();
   }
 
-  protected ApiRequestDetails getRequestDetails(String prompt) {
+  protected ApiRequestDetails getRequestDetails(String baseUrl, String prompt) {
     return new ApiRequestDetails(
-        format("https://api.openai.com/v1/engines/%s/completions",
+        format(baseUrl + "/engines/%s/completions",
             SettingsState.getInstance().textCompletionBaseModel.getModel()),
         Map.of(
             "stop", List.of(" Human:", " AI:"),

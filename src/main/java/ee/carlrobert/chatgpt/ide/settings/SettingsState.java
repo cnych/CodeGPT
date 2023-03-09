@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public class SettingsState implements PersistentStateComponent<SettingsState> {
 
   public String apiKey = "";
+  public string apiUrlBase = "https://api.openai.com/v1";
   public String accessToken = "";
   public String reverseProxyUrl = "";
   public BaseModel textCompletionBaseModel = BaseModel.DAVINCI;

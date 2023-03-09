@@ -25,7 +25,7 @@ public abstract class Client {
   protected String prompt = "";
   protected OkHttpClient client;
 
-  protected abstract ApiRequestDetails getRequestDetails(String prompt);
+  protected abstract ApiRequestDetails getRequestDetails(String baseUrl, String prompt);
 
   public abstract void clearPreviousSession();
 
@@ -34,8 +34,9 @@ public abstract class Client {
   public void getCompletionsAsync(String prompt, Consumer<String> onMessageReceived, Runnable onComplete) {
     this.prompt = prompt;
     this.client = buildClient();
+    var settings = SettingsState.getInstance();
     this.eventSource = EventSources.createFactory(client)
-        .newEventSource(buildHttpRequest(prompt), getEventSourceListener(onMessageReceived, onComplete));
+        .newEventSource(buildHttpRequest(settings.apiUrlBase, prompt), getEventSourceListener(onMessageReceived, onComplete));
   }
 
   public OkHttpClient buildClient() {
@@ -57,8 +58,8 @@ public abstract class Client {
     eventSource.cancel();
   }
 
-  public Request buildHttpRequest(String prompt) {
-    var requestDetails = getRequestDetails(prompt);
+  public Request buildHttpRequest(String baseUrl, String prompt) {
+    var requestDetails = getRequestDetails(baseUrl, prompt);
     try {
       return new Request.Builder()
           .url(requestDetails.getUrl())

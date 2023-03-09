@@ -26,6 +26,7 @@ public class SettingsComponent {
 
   private final JPanel mainPanel;
   private final JBTextField apiKeyField;
+  private final JBTextField apiUrlBaseField;
   private final ComboBox<BaseModel> chatCompletionBaseModelComboBox;
   private final ComboBox<BaseModel> textCompletionBaseModelComboBox;
   private final ComboBox<String> reverseProxyComboBox;
@@ -39,6 +40,7 @@ public class SettingsComponent {
   private final PortField proxyPortField;
 
   public SettingsComponent(SettingsState settings) {
+    apiUrlBaseField = new JBTextField(settings.apiUrlBase, 1);
     apiKeyField = new JBTextField(settings.apiKey, 1);
     chatCompletionBaseModelComboBox = new BaseModelComboBox(
         new BaseModel[] {
@@ -93,6 +95,15 @@ public class SettingsComponent {
 
   public JComponent getPreferredFocusedComponent() {
     return apiKeyField;
+  }
+
+  @NotNull
+  public String getApiUrlBase() {
+    return apiUrlBaseKeyField.getText();
+  }
+
+  public void setApiUrlBase(@NotNull String apiUrlBase) {
+    apiUrlBaseKeyField.setText(apiUrlBase);
   }
 
   @NotNull
@@ -195,6 +206,13 @@ public class SettingsComponent {
   }
 
   private JPanel createMainSelectionForm() {
+    var apiUrlBaseFieldPanel = UI.PanelFactory.panel(apiU)
+        .withLabel("API Base URL:")
+        .withComment("You can configure a reverse proxy address for the OpenAI API.")
+        .withCommentHyperlinkListener(this::handleHyperlinkClicked)
+        .createPanel();
+    apiUrlBaseFieldPanel.setBorder(JBUI.Borders.emptyLeft(8));
+
     var apiKeyFieldPanel = UI.PanelFactory.panel(apiKeyField)
         .withLabel("API key:")
         .withComment("You can find your Secret API key in your <a href=\"https://platform.openai.com/account/api-keys\">User settings</a>.")
@@ -209,6 +227,7 @@ public class SettingsComponent {
     textCompletionModelsPanel.setBorder(JBUI.Borders.emptyLeft(24));
 
     var gptRadioPanel = FormBuilder.createFormBuilder()
+        .addComponent(apiUrlBaseFieldPanel)
         .addComponent(apiKeyFieldPanel)
         .addComponent(UI.PanelFactory.panel(useChatCompletionRadioButton)
             .withComment("OpenAI’s most advanced language model")
